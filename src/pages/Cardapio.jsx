@@ -1,3 +1,4 @@
+/* eslint-disable */
 import "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 import {
@@ -5,11 +6,25 @@ import {
   FaWineGlassAlt,
   FaCocktail,
   FaIceCream,
+  FaChevronDown,
+  FaChevronUp,
+  FaSearch,
 } from "react-icons/fa";
+import { useState, useEffect } from "react";
+
+// Definindo as cores do tema
+const theme = {
+  colors: {
+    primary: "#FF4B2B",
+    secondary: "#2D3436",
+    accent: "#FF416C",
+    dark: "#1A1A1A",
+    light: "#FFFFFF",
+    gradient: "linear-gradient(45deg, #FF4B2B, #FF416C)",
+  },
+};
 
 const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-  
   body {
     font-family: 'Poppins', sans-serif;
     background-color: #f8f8f8;
@@ -30,35 +45,65 @@ const fadeIn = keyframes`
 
 const CardapioSection = styled.section`
   padding: 40px 0;
-  background-image: url("https://example.com/pizza-background.jpg");
-  background-size: cover;
-  background-attachment: fixed;
+  background: url("https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3")
+    center/cover fixed;
+  position: relative;
+  min-height: 100vh;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.6)
+    );
+    z-index: 1;
+  }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 30px;
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 30px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 `;
 
 const Title = styled.h1`
-  color: #ff4136;
-  font-size: 3rem;
+  color: ${theme.colors.primary};
+  font-size: 3.5rem;
   text-align: center;
   margin-bottom: 30px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: "Playfair Display", serif;
+  position: relative;
+  padding-bottom: 20px;
+
+  &::after {
+    content: "🍕";
+    font-size: 2rem;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 `;
 
 const Subtitle = styled.h2`
-  color: #333;
+  color: ${theme.colors.primary};
   font-size: 2.2rem;
-  margin-top: 40px;
-  margin-bottom: 20px;
+  font-family: "Playfair Display", serif;
   display: flex;
   align-items: center;
+  gap: 1rem;
 
   svg {
-    margin-right: 10px;
+    font-size: 1.8rem;
   }
 `;
 
@@ -90,35 +135,117 @@ const MenuSection = styled.div`
   margin-bottom: 40px;
 `;
 
-const MenuItem = styled.div`
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  animation: ${fadeIn} 0.5s ease-out;
+const Badge = styled.span`
+  background: ${(props) =>
+    props.type === "new"
+      ? "linear-gradient(45deg, #00b894, #00cec9)"
+      : props.type === "popular"
+      ? "linear-gradient(45deg, #e17055, #d63031)"
+      : props.type === "vegetarian"
+      ? "linear-gradient(45deg, #6c5ce7, #a8e6cf)"
+      : theme.colors.gradient};
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
 
-  &:hover {
-    transform: translateY(-5px);
+const PriceTag = styled.div`
+  background: ${theme.colors.gradient};
+  color: white;
+  padding: 8px 16px;
+  border-radius: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+  margin-top: 10px;
+
+  &::before {
+    content: "R$";
+    font-size: 0.8em;
+    opacity: 0.9;
   }
 `;
 
 const ItemName = styled.h3`
-  font-size: 1.2rem;
-  margin-bottom: 5px;
-  color: #ff4136;
+  font-size: 1.4rem;
+  color: ${theme.colors.dark};
+  font-family: "Playfair Display", serif;
+  position: relative;
+  margin-bottom: 15px;
+  transition: color 0.3s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 40px;
+    height: 2px;
+    background: ${theme.colors.gradient};
+    transition: width 0.3s ease;
+  }
+`;
+
+const MenuItem = styled.div`
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 75, 43, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(255, 75, 43, 0.15);
+
+    ${ItemName}::after {
+      width: 100%;
+    }
+  }
+`;
+
+const ItemHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 `;
 
 const ItemDescription = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #666;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  flex-grow: 1;
 `;
 
 const ItemPrice = styled.p`
-  font-weight: bold;
-  color: #ff4136;
-  font-size: 1.1rem;
+  font-weight: 600;
+  color: ${theme.colors.primary};
+  font-size: 1.3rem;
+  font-family: "Playfair Display", serif;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &::before {
+    content: "R$";
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
 `;
 
 const Note = styled.p`
@@ -128,7 +255,239 @@ const Note = styled.p`
   text-align: center;
 `;
 
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px dashed ${theme.colors.primary};
+  position: relative;
+
+  &::after {
+    content: "•••";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: ${theme.colors.primary};
+    letter-spacing: 5px;
+    font-size: 1.2rem;
+  }
+`;
+
+const ToggleButton = styled.button`
+  background: linear-gradient(
+    45deg,
+    ${theme.colors.primary},
+    ${theme.colors.accent}
+  );
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 65, 54, 0.4);
+  }
+
+  svg {
+    font-size: 1.2rem;
+  }
+`;
+
+const CollapsibleSection = styled.div`
+  max-height: ${(props) => (props.$isOpen ? "2000px" : "0")};
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+  opacity: ${(props) => (props.$isOpen ? "1" : "0")};
+  transition: all 0.3s ease-in-out;
+`;
+
+const SearchContainer = styled.div`
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+`;
+
+const SearchBar = styled.div`
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 1.2rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  margin: 2rem auto;
+
+  &:focus-within {
+    border-color: ${theme.colors.primary};
+    box-shadow: 0 4px 20px rgba(255, 65, 54, 0.2);
+    transform: translateY(-2px);
+  }
+
+  svg {
+    color: ${theme.colors.primary};
+    font-size: 1.6rem;
+    margin-right: 1.2rem;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1.1rem;
+    font-family: inherit;
+    color: ${theme.colors.dark};
+
+    &::placeholder {
+      color: #999;
+      font-style: italic;
+    }
+  }
+`;
+
+const NoResults = styled.div`
+  text-align: center;
+  padding: 2rem;
+  color: ${theme.colors.secondary};
+  font-size: 1.1rem;
+  grid-column: 1 / -1;
+`;
+
+const CategoryIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  background: ${theme.colors.gradient};
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+
+  svg {
+    color: white;
+    font-size: 1.2rem;
+  }
+`;
+
+const MenuGrid = styled(MenuSection)`
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+`;
+
+const Ribbon = styled.div`
+  position: absolute;
+  top: 20px;
+  right: -30px;
+  background: ${(props) =>
+    props.type === "new"
+      ? "linear-gradient(45deg, #00b894, #00cec9)"
+      : props.type === "popular"
+      ? "linear-gradient(45deg, #e17055, #d63031)"
+      : theme.colors.gradient};
+  color: white;
+  padding: 5px 30px;
+  transform: rotate(45deg);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+`;
+
+const PriceContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+`;
+
+const SizeLabel = styled.span`
+  font-size: 0.8rem;
+  color: ${theme.colors.secondary};
+  opacity: 0.8;
+`;
+
+const BadgeContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+`;
+
 function Cardapio() {
+  const [openSections, setOpenSections] = useState({
+    pizzasSalgadas: false,
+    pizzasDoces: false,
+    bebidas: false,
+    vinhos: false,
+    sobremesas: false,
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const toggleSection = (section) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  // Função para filtrar itens
+  const filterItems = (items) => {
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.description &&
+          item.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  };
+
+  // Verifica se há resultados em alguma seção
+  const hasResults = () => {
+    return (
+      filterItems(pizzasSalgadas).length > 0 ||
+      filterItems(pizzasDoces).length > 0 ||
+      filterItems(bebidas).length > 0 ||
+      filterItems(vinhos).length > 0 ||
+      filterItems(sobremesas).length > 0
+    );
+  };
+
+  // Abre automaticamente as seções que contêm resultados da pesquisa
+  const updateOpenSections = () => {
+    if (searchTerm) {
+      setOpenSections({
+        pizzasSalgadas: filterItems(pizzasSalgadas).length > 0,
+        pizzasDoces: filterItems(pizzasDoces).length > 0,
+        bebidas: filterItems(bebidas).length > 0,
+        vinhos: filterItems(vinhos).length > 0,
+        sobremesas: filterItems(sobremesas).length > 0,
+      });
+    }
+  };
+
+  // Atualiza as seções abertas quando o termo de pesquisa muda
+  useEffect(() => {
+    updateOpenSections();
+  }, [searchTerm]);
+
   const pizzasSalgadas = [
     {
       name: "4 Queijos",
@@ -136,6 +495,16 @@ function Cardapio() {
         "Molho de tomate, parmesão, catupiry, muçarela, provolone, azeitona e orégano.",
       priceMedia: 77.9,
       priceGrande: 79.9,
+      isPopular: true,
+    },
+    {
+      name: "Marguerita Especial",
+      description:
+        "Molho de tomate, muçarela, tomate, manjericão fresco e orégano.",
+      priceMedia: 67.9,
+      priceGrande: 70.9,
+      isNew: true,
+      isVegetarian: true,
     },
     {
       name: "6 Queijos",
@@ -825,90 +1194,217 @@ function Cardapio() {
             </MenuItem>
           </MenuSection>
 
-          <Subtitle>
-            <FaPizzaSlice />
-            Pizzas Salgadas
-          </Subtitle>
-          <MenuSection>
-            {pizzasSalgadas.map((pizza, index) => (
-              <MenuItem key={index}>
-                <ItemName>{pizza.name}</ItemName>
-                <ItemDescription>{pizza.description}</ItemDescription>
-                <ItemPrice>
-                  {pizza.price
-                    ? `R$ ${pizza.price.toFixed(2)}`
-                    : `R$ ${pizza.priceMedia.toFixed(
-                        2
-                      )} (Média) / R$ ${pizza.priceGrande.toFixed(2)} (Grande)`}
-                </ItemPrice>
-              </MenuItem>
-            ))}
+          <SearchContainer>
+            <SearchBar>
+              <FaSearch />
+              <input
+                type="text"
+                placeholder="Pesquisar pizzas, bebidas e sobremesas..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </SearchBar>
+          </SearchContainer>
+
+          {!hasResults() && searchTerm && (
+            <NoResults>
+              Nenhum item encontrado para &quot;{searchTerm}&quot;
+            </NoResults>
+          )}
+
+          <SectionHeader>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <CategoryIcon>
+                <FaPizzaSlice />
+              </CategoryIcon>
+              <div>
+                <Subtitle>
+                  Pizzas Salgadas
+                  {searchTerm && (
+                    <span style={{ fontSize: "1rem", opacity: 0.8 }}>
+                      {` (${filterItems(pizzasSalgadas).length} resultados)`}
+                    </span>
+                  )}
+                </Subtitle>
+              </div>
+            </div>
+            <ToggleButton onClick={() => toggleSection("pizzasSalgadas")}>
+              {openSections.pizzasSalgadas ? (
+                <>
+                  Encolher <FaChevronUp />
+                </>
+              ) : (
+                <>
+                  Expandir <FaChevronDown />
+                </>
+              )}
+            </ToggleButton>
+          </SectionHeader>
+          <CollapsibleSection $isOpen={openSections.pizzasSalgadas}>
+            <MenuGrid>
+              {filterItems(pizzasSalgadas).map((pizza, index) => (
+                <MenuItem key={index}>
+                  {pizza.isNew && <Ribbon type="new">Novo</Ribbon>}
+                  {pizza.isPopular && <Ribbon type="popular">Popular</Ribbon>}
+
+                  <div>
+                    <ItemHeader>
+                      <ItemName>{pizza.name}</ItemName>
+                    </ItemHeader>
+
+                    <BadgeContainer>
+                      {pizza.isVegetarian && (
+                        <Badge type="vegetarian">Veggie</Badge>
+                      )}
+                      {pizza.isSpicy && <Badge type="spicy">Picante</Badge>}
+                    </BadgeContainer>
+
+                    <ItemDescription>{pizza.description}</ItemDescription>
+                  </div>
+
+                  <PriceContainer>
+                    <div>
+                      <SizeLabel>Média / Grande</SizeLabel>
+                      <PriceTag>
+                        {pizza.price
+                          ? pizza.price.toFixed(2)
+                          : `${pizza.priceMedia.toFixed(
+                              2
+                            )} / ${pizza.priceGrande.toFixed(2)}`}
+                      </PriceTag>
+                    </div>
+                  </PriceContainer>
+                </MenuItem>
+              ))}
+            </MenuGrid>
             <Note>
               Todas nossas pizzas acompanham borda recheada de catupiry
             </Note>
-          </MenuSection>
+          </CollapsibleSection>
 
-          <Subtitle>
-            <FaPizzaSlice />
-            Pizzas Doces
-          </Subtitle>
-          <MenuSection>
-            {pizzasDoces.map((pizza, index) => (
-              <MenuItem key={index}>
-                <ItemName>{pizza.name}</ItemName>
-                <ItemDescription>{pizza.description}</ItemDescription>
-                <ItemPrice>
-                  {pizza.price
-                    ? `R$ ${pizza.price.toFixed(2)}`
-                    : `R$ ${pizza.priceMedia.toFixed(
-                        2
-                      )} (Média) / R$ ${pizza.priceGrande.toFixed(2)} (Grande)`}
-                </ItemPrice>
-              </MenuItem>
-            ))}
-          </MenuSection>
+          <SectionHeader>
+            <Subtitle>
+              <FaPizzaSlice />
+              Pizzas Doces
+            </Subtitle>
+            <ToggleButton onClick={() => toggleSection("pizzasDoces")}>
+              {openSections.pizzasDoces ? (
+                <>
+                  Encolher <FaChevronUp />
+                </>
+              ) : (
+                <>
+                  Expandir <FaChevronDown />
+                </>
+              )}
+            </ToggleButton>
+          </SectionHeader>
+          <CollapsibleSection $isOpen={openSections.pizzasDoces}>
+            <MenuSection>
+              {pizzasDoces.map((pizza, index) => (
+                <MenuItem key={pizza.name}>
+                  <ItemName>{pizza.name}</ItemName>
+                  <ItemDescription>{pizza.description}</ItemDescription>
+                  <ItemPrice>
+                    {pizza.price
+                      ? `R$ ${pizza.price.toFixed(2)}`
+                      : `R$ ${pizza.priceMedia.toFixed(
+                          2
+                        )} (Média) / R$ ${pizza.priceGrande.toFixed(
+                          2
+                        )} (Grande)`}
+                  </ItemPrice>
+                </MenuItem>
+              ))}
+            </MenuSection>
+          </CollapsibleSection>
 
-          <Subtitle>
-            <FaCocktail />
-            Bebidas
-          </Subtitle>
-          <MenuSection>
-            {bebidas.map((bebida, index) => (
-              <MenuItem key={index}>
-                <ItemName>{bebida.name}</ItemName>
-                {bebida.description && (
-                  <ItemDescription>{bebida.description}</ItemDescription>
-                )}
-                <ItemPrice>R$ {bebida.price.toFixed(2)}</ItemPrice>
-              </MenuItem>
-            ))}
-          </MenuSection>
+          <SectionHeader>
+            <Subtitle>
+              <FaCocktail />
+              Bebidas
+            </Subtitle>
+            <ToggleButton onClick={() => toggleSection("bebidas")}>
+              {openSections.bebidas ? (
+                <>
+                  Encolher <FaChevronUp />
+                </>
+              ) : (
+                <>
+                  Expandir <FaChevronDown />
+                </>
+              )}
+            </ToggleButton>
+          </SectionHeader>
+          <CollapsibleSection $isOpen={openSections.bebidas}>
+            <MenuSection>
+              {bebidas.map((bebida, index) => (
+                <MenuItem key={bebida.name}>
+                  <ItemName>{bebida.name}</ItemName>
+                  {bebida.description && (
+                    <ItemDescription>{bebida.description}</ItemDescription>
+                  )}
+                  <ItemPrice>R$ {bebida.price.toFixed(2)}</ItemPrice>
+                </MenuItem>
+              ))}
+            </MenuSection>
+          </CollapsibleSection>
 
-          <Subtitle>
-            <FaWineGlassAlt />
-            Vinhos
-          </Subtitle>
-          <MenuSection>
-            {vinhos.map((vinho, index) => (
-              <MenuItem key={index}>
-                <ItemName>{vinho.name}</ItemName>
-                <ItemPrice>R$ {vinho.price.toFixed(2)}</ItemPrice>
-              </MenuItem>
-            ))}
-          </MenuSection>
+          <SectionHeader>
+            <Subtitle>
+              <FaWineGlassAlt />
+              Vinhos
+            </Subtitle>
+            <ToggleButton onClick={() => toggleSection("vinhos")}>
+              {openSections.vinhos ? (
+                <>
+                  Encolher <FaChevronUp />
+                </>
+              ) : (
+                <>
+                  Expandir <FaChevronDown />
+                </>
+              )}
+            </ToggleButton>
+          </SectionHeader>
+          <CollapsibleSection $isOpen={openSections.vinhos}>
+            <MenuSection>
+              {vinhos.map((vinho, index) => (
+                <MenuItem key={vinho.name}>
+                  <ItemName>{vinho.name}</ItemName>
+                  <ItemPrice>R$ {vinho.price.toFixed(2)}</ItemPrice>
+                </MenuItem>
+              ))}
+            </MenuSection>
+          </CollapsibleSection>
 
-          <Subtitle>
-            <FaIceCream />
-            Sobremesas
-          </Subtitle>
-          <MenuSection>
-            {sobremesas.map((sobremesa, index) => (
-              <MenuItem key={index}>
-                <ItemName>{sobremesa.name}</ItemName>
-                <ItemPrice>R$ {sobremesa.price.toFixed(2)}</ItemPrice>
-              </MenuItem>
-            ))}
-          </MenuSection>
+          <SectionHeader>
+            <Subtitle>
+              <FaIceCream />
+              Sobremesas
+            </Subtitle>
+            <ToggleButton onClick={() => toggleSection("sobremesas")}>
+              {openSections.sobremesas ? (
+                <>
+                  Encolher <FaChevronUp />
+                </>
+              ) : (
+                <>
+                  Expandir <FaChevronDown />
+                </>
+              )}
+            </ToggleButton>
+          </SectionHeader>
+          <CollapsibleSection $isOpen={openSections.sobremesas}>
+            <MenuSection>
+              {sobremesas.map((sobremesa, index) => (
+                <MenuItem key={sobremesa.name}>
+                  <ItemName>{sobremesa.name}</ItemName>
+                  <ItemPrice>R$ {sobremesa.price.toFixed(2)}</ItemPrice>
+                </MenuItem>
+              ))}
+            </MenuSection>
+          </CollapsibleSection>
         </Container>
       </CardapioSection>
     </>

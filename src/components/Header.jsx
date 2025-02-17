@@ -89,9 +89,11 @@ const LogoT = styled(LogoText)`
   }
 `;
 
-const Nav = styled.nav`
-  @media (max-width: ${breakpoints.tablet}) {
-    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+const MobileNav = styled.nav`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: ${props => props.$isOpen ? 'flex' : 'none'};
     position: fixed;
     top: 0;
     left: 0;
@@ -198,7 +200,7 @@ const MobileTitle = styled.h1`
   margin: 0;
 
   @media (max-width: ${breakpoints.tablet}) {
-    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
   }
 `;
 
@@ -269,8 +271,8 @@ function Header() {
             {isNavOpen ? <FaTimes /> : <FaBars />}
           </MenuToggle>
         </MobileHeader>
-        <Nav isOpen={isNavOpen}>
-          <MobileTitle isOpen={isNavOpen}>Minas Tchê</MobileTitle>
+        <MobileNav $isOpen={isNavOpen}>
+          <MobileTitle $isOpen={isNavOpen}>Minas Tchê</MobileTitle>
           <ul>
             <li><Link to="/" onClick={() => setIsNavOpen(false)}>Início</Link></li>
             <li><Link to="/cardapio" onClick={() => setIsNavOpen(false)}>Cardápio</Link></li>
@@ -278,7 +280,7 @@ function Header() {
             <li><Link to="/sobre" onClick={() => setIsNavOpen(false)}>Sobre</Link></li>
             <li><Link to="/contato" onClick={() => setIsNavOpen(false)}>Contato</Link></li>
           </ul>
-        </Nav>
+        </MobileNav>
       </HeaderContainer>
     </StyledHeader>
   );
