@@ -11,6 +11,7 @@ import {
   FaSearch,
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 // Definindo as cores do tema
 const theme = {
@@ -44,23 +45,11 @@ const fadeIn = keyframes`
 `;
 
 const CardapioSection = styled.section`
-  padding: 40px 0;
-  background: url("https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3")
-    center/cover fixed;
-  position: relative;
+  padding: 60px 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   min-height: 100vh;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.8),
-      rgba(0, 0, 0, 0.6)
-    );
-    z-index: 1;
-  }
+  color: #fff;
+  position: relative;
 `;
 
 const Container = styled.div`
@@ -69,26 +58,27 @@ const Container = styled.div`
   padding: 30px;
   position: relative;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.97);
-  border-radius: 30px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 const Title = styled.h1`
-  color: ${theme.colors.primary};
   font-size: 3.5rem;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   font-family: "Playfair Display", serif;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   position: relative;
-  padding-bottom: 20px;
 
   &::after {
     content: "🍕";
     font-size: 2rem;
     position: absolute;
-    bottom: -10px;
+    bottom: -15px;
     left: 50%;
     transform: translateX(-50%);
   }
@@ -108,24 +98,47 @@ const Subtitle = styled.h2`
 `;
 
 const InfoBox = styled.div`
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 2px solid #ff4136;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 8px 32px rgba(255, 75, 43, 0.15);
   animation: ${fadeIn} 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ff4b2b, #ff416c);
+  }
 `;
 
 const InfoTitle = styled.h3`
-  color: #ff4136;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  color: #ff4b2b;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+  text-align: center;
 `;
 
 const InfoText = styled.p`
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+
+  &:last-child {
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+  }
 `;
 
 const MenuSection = styled.div`
@@ -156,7 +169,7 @@ const Badge = styled.span`
 `;
 
 const PriceTag = styled.div`
-  background: ${theme.colors.gradient};
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
   color: white;
   padding: 8px 16px;
   border-radius: 25px;
@@ -176,44 +189,30 @@ const PriceTag = styled.div`
 
 const ItemName = styled.h3`
   font-size: 1.4rem;
-  color: ${theme.colors.dark};
+  color: #ff4b2b;
   font-family: "Playfair Display", serif;
   position: relative;
   margin-bottom: 15px;
   transition: color 0.3s ease;
-
-  &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-    width: 40px;
-    height: 2px;
-    background: ${theme.colors.gradient};
-    transition: width 0.3s ease;
-  }
 `;
 
-const MenuItem = styled.div`
-  background: white;
-  border-radius: 15px;
+const MenuItem = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 75, 43, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   &:hover {
     transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.1);
     box-shadow: 0 12px 30px rgba(255, 75, 43, 0.15);
-
-    ${ItemName}::after {
-      width: 100%;
-    }
   }
 `;
 
@@ -226,7 +225,7 @@ const ItemHeader = styled.div`
 
 const ItemDescription = styled.p`
   font-size: 0.95rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 15px;
   line-height: 1.6;
   flex-grow: 1;
@@ -261,27 +260,22 @@ const SectionHeader = styled.div`
   align-items: center;
   margin: 2.5rem 0;
   padding-bottom: 1rem;
-  border-bottom: 2px dashed ${theme.colors.primary};
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
 
   &::after {
-    content: "•••";
+    content: "";
     position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: ${theme.colors.primary};
-    letter-spacing: 5px;
-    font-size: 1.2rem;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ff4b2b, transparent);
   }
 `;
 
 const ToggleButton = styled.button`
-  background: linear-gradient(
-    45deg,
-    ${theme.colors.primary},
-    ${theme.colors.accent}
-  );
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -295,10 +289,11 @@ const ToggleButton = styled.button`
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(255, 65, 54, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 75, 43, 0.3);
   }
 
   svg {
@@ -323,40 +318,41 @@ const SearchContainer = styled.div`
 const SearchBar = styled.div`
   display: flex;
   align-items: center;
-  background: white;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
   padding: 1.2rem 2rem;
   border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
   max-width: 600px;
-  border: 2px solid transparent;
   transition: all 0.3s ease;
   margin: 2rem auto;
 
   &:focus-within {
-    border-color: ${theme.colors.primary};
-    box-shadow: 0 4px 20px rgba(255, 65, 54, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(255, 75, 43, 0.2);
     transform: translateY(-2px);
   }
 
-  svg {
-    color: ${theme.colors.primary};
-    font-size: 1.6rem;
-    margin-right: 1.2rem;
-  }
-
   input {
+    background: transparent;
     border: none;
     outline: none;
     width: 100%;
     font-size: 1.1rem;
     font-family: inherit;
-    color: ${theme.colors.dark};
+    color: white;
 
     &::placeholder {
-      color: #999;
+      color: rgba(255, 255, 255, 0.6);
       font-style: italic;
     }
+  }
+
+  svg {
+    color: #ff4b2b;
+    font-size: 1.6rem;
+    margin-right: 1.2rem;
   }
 `;
 

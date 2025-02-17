@@ -1,159 +1,193 @@
-import "react";
 import styled from "styled-components";
-import { FaPhone, FaGlobe, FaMapMarkerAlt, FaUtensils, FaShoppingBag } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { FaHeart, FaPizzaSlice, FaHistory } from "react-icons/fa";
 
 const SobreSection = styled.section`
-  padding: 80px 0;
-  background-color: #f8f8f8;
+  padding: 60px 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  min-height: 100vh;
+  color: #fff;
 `;
 
 const Container = styled.div`
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 `;
 
 const Title = styled.h1`
-  color: #ff4136;
-  font-size: 3rem;
-  margin-bottom: 40px;
+  font-size: 3.5rem;
   text-align: center;
-  font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-`;
+  margin-bottom: 50px;
+  font-family: "Playfair Display", serif;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
 
-const Paragraph = styled.p`
-  color: #333;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 25px;
-  text-align: justify;
-`;
-
-const SectionTitle = styled.h2`
-  color: #ff4136;
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: 600;
-`;
-
-const ContactInfo = styled.div`
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 40px;
-`;
-
-const ContactItem = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  
-  &:last-child {
-    margin-bottom: 0;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
   }
 `;
 
-const Icon = styled.span`
-  margin-right: 15px;
-  color: #ff4136;
-  font-size: 1.2rem;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
 `;
 
-const Highlight = styled.span`
-  color: #ff4136;
-  font-weight: 600;
-`;
-
-const ImageContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  background-image: url('URL_DA_IMAGEM_DO_RESTAURANTE');
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  margin-bottom: 40px;
-`;
-
-const CTAButton = styled.button`
-  background-color: #ff4136;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1.1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+const Card = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #e30c00;
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.1);
   }
+`;
+
+const IconWrapper = styled.div`
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.8rem;
+  box-shadow: 0 10px 20px rgba(255, 75, 43, 0.3);
+`;
+
+const CardTitle = styled.h3`
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+  color: #ff4b2b;
+`;
+
+const CardText = styled.p`
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+`;
+
+const StorySection = styled.div`
+  margin-top: 80px;
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ff4b2b, transparent);
+  }
+`;
+
+const StoryTitle = styled.h2`
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  font-family: "Playfair Display", serif;
+  color: #ff4b2b;
+`;
+
+const StoryText = styled.p`
+  font-size: 1.2rem;
+  line-height: 1.8;
+  max-width: 800px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.9);
 `;
 
 function Sobre() {
   return (
     <SobreSection>
       <Container>
-        <Title>Bem-vindo ao Minas Tchê</Title>
+        <Title>Nossa História</Title>
 
-        <ImageContainer />
+        <Grid>
+          <Card
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}>
+            <IconWrapper>
+              <FaHistory />
+            </IconWrapper>
+            <CardTitle>Tradição</CardTitle>
+            <CardText>
+              Desde 1995, servindo as melhores pizzas com receitas tradicionais
+              passadas de geração em geração.
+            </CardText>
+          </Card>
 
-        <SectionTitle>Nossa História</SectionTitle>
-        <Paragraph>
-          A <Highlight>Pizzaria e Restaurante Minas Tchê</Highlight> oferece uma experiência
-          gastronômica completa, com almoço em buffet variado, com destaque para
-          as massas, e um delicioso jantar com diversas opções de pizzas,
-          incluindo o popular rodízio. Nosso ambiente é simples e acolhedor,
-          perfeito para reunir a família e amigos.
-        </Paragraph>
+          <Card
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}>
+            <IconWrapper>
+              <FaPizzaSlice />
+            </IconWrapper>
+            <CardTitle>Qualidade</CardTitle>
+            <CardText>
+              Ingredientes selecionados e massas preparadas diariamente para
+              garantir o melhor sabor.
+            </CardText>
+          </Card>
 
-        <SectionTitle>Nosso Menu</SectionTitle>
-        <Paragraph>
-          À noite, nosso rodízio oferece uma grande variedade de sabores de
-          pizza, desde os clássicos até criações exclusivas, com opções para
-          todos os paladares, incluindo vegetarianos. No almoço, oferecemos um
-          buffet variado com foco em massas, saladas frescas e acompanhamentos
-          deliciosos, perfeito para uma refeição rápida e saborosa.
-        </Paragraph>
+          <Card
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}>
+            <IconWrapper>
+              <FaHeart />
+            </IconWrapper>
+            <CardTitle>Paixão</CardTitle>
+            <CardText>
+              Amor pela gastronomia e dedicação em cada pizza que preparamos
+              para nossos clientes.
+            </CardText>
+          </Card>
+        </Grid>
 
-        <Paragraph>
-          Utilizamos <Highlight>ingredientes frescos e selecionados</Highlight> para garantir o melhor
-          sabor em cada prato.
-        </Paragraph>
-
-        <SectionTitle>Retirada no Local</SectionTitle>
-        <Paragraph>
-          Além da experiência no restaurante, oferecemos o serviço de retirada para
-          sua maior comodidade. Faça seu pedido por telefone e retire sua refeição
-          diretamente em nosso estabelecimento. É uma ótima opção para quem deseja
-          desfrutar de nossas delícias no conforto de casa ou no escritório.
-        </Paragraph>
-
-        <CTAButton>Faça sua Reserva</CTAButton>
-
-        <ContactInfo>
-          <ContactItem>
-            <Icon><FaMapMarkerAlt /></Icon>
-            Av. Cesário Alvim, 2385 - Nossa Sra. Aparecida, Uberlândia - MG
-          </ContactItem>
-          <ContactItem>
-            <Icon><FaPhone /></Icon>
-            [Número de telefone]
-          </ContactItem>
-          <ContactItem>
-            <Icon><FaGlobe /></Icon>
-            [Site, se houver]
-          </ContactItem>
-          <ContactItem>
-            <Icon><FaUtensils /></Icon>
-            Aberto de Terça a Domingo, das 11h às 23h
-          </ContactItem>
-          <ContactItem>
-            <Icon><FaShoppingBag /></Icon>
-            Retirada disponível no local
-          </ContactItem>
-        </ContactInfo>
+        <StorySection>
+          <StoryTitle>Nossa Jornada</StoryTitle>
+          <StoryText>
+            O Minas Tchê nasceu da união entre a tradicional culinária mineira e
+            o amor pela pizza. Fundado por uma família que migrou do sul para
+            Minas Gerais, nosso restaurante combina o melhor dos dois mundos: o
+            aconchego da comida mineira e a arte da pizza italiana.
+            <br />
+            <br />
+            Hoje, somos referência na cidade, conhecidos por nossas pizzas
+            artesanais e pelo ambiente familiar acolhedor. Nossa missão é
+            proporcionar momentos especiais através de sabores únicos e um
+            atendimento caloroso.
+          </StoryText>
+        </StorySection>
       </Container>
     </SobreSection>
   );

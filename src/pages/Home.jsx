@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styled, { keyframes, createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { Link } from "react-router-dom";
 import {
   FaPizzaSlice,
@@ -10,6 +10,7 @@ import {
   FaEnvelope,
   FaMapMarkerAlt,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 // Estilos globais
 const GlobalStyle = createGlobalStyle`
@@ -19,12 +20,6 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
   }
-`;
-
-// Animações
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to { opacity: 1; }
 `;
 
 // Tema
@@ -112,71 +107,109 @@ const Button = styled(Link)`
 `;
 
 // Componentes específicos
-const HeroSection = styled(Section)`
-  background-image: url("/images/hero-background.jpg");
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: ${theme.colors.light};
+const HomeSection = styled.section`
+  padding: 60px 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  min-height: 100vh;
+  color: #fff;
   position: relative;
-  isolation: isolate;
+`;
 
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0.3) 100%
-    );
-    z-index: 1;
+const HeroSection = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  padding: 60px 30px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 60px;
+`;
+
+const Title = styled(motion.h1)`
+  font-size: 4rem;
+  font-family: "Playfair Display", serif;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+`;
+
+const Subtitle = styled(motion.p)`
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  line-height: 1.6;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+`;
+
+const FeatureCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 30px rgba(255, 75, 43, 0.15);
   }
 `;
 
-const HeroContent = styled.div`
-  position: relative;
-  z-index: 3;
-  animation: ${fadeIn} 2s ease-out;
+const IconWrapper = styled.div`
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  width: 100%;
-  max-width: 800px;
-  padding: 0 20px;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 2rem;
+  box-shadow: 0 10px 20px rgba(255, 75, 43, 0.3);
+  color: white;
+`;
 
-  h1 {
-    font-size: 4.5rem;
-    margin-bottom: 1.5rem;
-    font-family: ${theme.fonts.heading};
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    position: relative;
+const FeatureTitle = styled.h3`
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  font-family: "Playfair Display", serif;
+  color: #ff4b2b;
+`;
 
-    @media (max-width: 768px) {
-      font-size: 3rem;
-    }
+const FeatureText = styled.p`
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+`;
 
-    @media (max-width: 480px) {
-      font-size: 2.5rem;
-    }
-  }
+const CTAButton = styled(motion(Link))`
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-top: 20px;
+  text-decoration: none;
+  display: inline-block;
 
-  p {
-    font-size: 1.8rem;
-    margin-bottom: 2.5rem;
-    font-family: ${theme.fonts.body};
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    position: relative;
-
-    @media (max-width: 768px) {
-      font-size: 1.4rem;
-      margin-bottom: 2rem;
-    }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 75, 43, 0.3);
   }
 `;
 
@@ -512,13 +545,79 @@ function Home() {
   return (
     <>
       <GlobalStyle />
-      <HeroSection>
-        <HeroContent>
-          <h1>Bem-vindo ao Minas Tchê</h1>
-          <p>O melhor da culinária mineira e as mais deliciosas pizzas!</p>
-          <Button to="/cardapio">Ver Cardápio</Button>
-        </HeroContent>
-      </HeroSection>
+      <HomeSection>
+        <Container>
+          <HeroSection>
+            <Title
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}>
+              Minas Tchê
+            </Title>
+            <Subtitle
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}>
+              A melhor experiência gastronômica de Uberlândia
+            </Subtitle>
+            <CTAButton
+              to="/cardapio"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}>
+              Ver Cardápio
+            </CTAButton>
+          </HeroSection>
+
+          <Grid>
+            <FeatureCard
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}>
+              <IconWrapper>
+                <FaPizzaSlice />
+              </IconWrapper>
+              <FeatureTitle>Pizzas Artesanais</FeatureTitle>
+              <FeatureText>
+                Nossas pizzas são preparadas com ingredientes selecionados e
+                massa feita diariamente.
+              </FeatureText>
+            </FeatureCard>
+
+            <FeatureCard
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}>
+              <IconWrapper>
+                <FaUtensils />
+              </IconWrapper>
+              <FeatureTitle>Buffet Completo</FeatureTitle>
+              <FeatureText>
+                Buffet com variedade de pratos quentes, saladas e sobremesas.
+              </FeatureText>
+            </FeatureCard>
+
+            <FeatureCard
+              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}>
+              <IconWrapper>
+                <FaWineGlassAlt />
+              </IconWrapper>
+              <FeatureTitle>Carta de Vinhos</FeatureTitle>
+              <FeatureText>
+                Seleção especial de vinhos nacionais e importados para
+                harmonizar com seu prato.
+              </FeatureText>
+            </FeatureCard>
+          </Grid>
+        </Container>
+      </HomeSection>
 
       <Section>
         <Container>
@@ -575,11 +674,17 @@ function Home() {
         <Container>
           <SectionTitle>Nossa Galeria</SectionTitle>
           <GalleryGrid>
-            {[1, 2, 3, 4].map((num) => (
+            {[
+              "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&w=500", // Pizza
+              "https://images.unsplash.com/photo-1574484284002-952d92456975?auto=format&w=500", // Prato Mineiro
+              "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&w=500", // Vinho
+              "https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&w=500", // Sobremesa
+            ].map((url, index) => (
               <GalleryImage
-                key={num}
-                src={`/images/prato${num}.jpg`}
-                alt={`Prato ${num}`}
+                key={index}
+                src={url}
+                alt={`Prato ${index + 1}`}
+                loading="lazy"
               />
             ))}
           </GalleryGrid>

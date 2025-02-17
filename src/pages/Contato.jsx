@@ -1,249 +1,314 @@
-import { useState } from 'react';
-import styled from 'styled-components';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
-
-const breakpoints = {
-  smallMobile: '320px',
-  mobile: '375px',
-  largeMobile: '414px',
-  tablet: '768px',
-  desktop: '1024px',
-};
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { FaPhone, FaWhatsapp, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { useState } from "react";
 
 const ContatoSection = styled.section`
-  padding: 40px 0;
-  background-color: #f8f8f8;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 30px 0;
-  }
+  padding: 60px 0;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  min-height: 100vh;
+  color: #fff;
+  position: relative;
 `;
 
 const Container = styled.div`
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    padding: 0 15px;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0 10px;
-  }
+  padding: 30px;
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 const Title = styled.h1`
-  color: #ff4136;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 3.5rem;
   text-align: center;
+  margin-bottom: 50px;
+  font-family: "Playfair Display", serif;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
 
-  @media (max-width: ${breakpoints.tablet}) {
-    font-size: 2rem;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 1.8rem;
-  }
-
-  @media (max-width: ${breakpoints.smallMobile}) {
-    font-size: 1.6rem;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
   }
 `;
 
-const Subtitle = styled.p`
-  font-size: 1.2rem;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+`;
+
+const ContactCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
   text-align: center;
-  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 
-  @media (max-width: ${breakpoints.tablet}) {
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.9rem;
+  &:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 30px rgba(255, 75, 43, 0.15);
   }
 `;
 
-const ContactWrapper = styled.div`
+const IconWrapper = styled.div`
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
+  border-radius: 50%;
   display: flex;
-  justify-content: space-between;
-  gap: 40px;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    flex-direction: column;
-    gap: 30px;
-  }
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.8rem;
+  box-shadow: 0 10px 20px rgba(255, 75, 43, 0.3);
+  color: white;
 `;
 
 const ContactInfo = styled.div`
-  flex: 1;
-`;
-
-const ContactForm = styled.form`
-  flex: 1;
-`;
-
-const InfoItem = styled.div`
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 20px;
-
-  @media (max-width: ${breakpoints.tablet}) {
-    margin-bottom: 15px;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    margin-bottom: 12px;
-  }
-`;
-
-const Icon = styled.span`
-  margin-right: 15px;
-  color: #ff4136;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.2rem;
-  margin-top: 3px;
+  margin-top: 15px;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 1rem;
-    margin-right: 10px;
+  a {
+    color: #ff4b2b;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #ff416c;
+    }
   }
 `;
 
-const InfoText = styled.span`
-  line-height: 1.4;
+const Schedule = styled.div`
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+`;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.9rem;
-  }
+const FormSection = styled.div`
+  margin-top: 60px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+`;
+
+const FormTitle = styled.h2`
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 30px;
+  font-family: "Playfair Display", serif;
+  color: #ff4b2b;
+`;
+
+const Form = styled.form`
+  display: grid;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
 `;
 
 const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: white;
   font-size: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 8px;
-    font-size: 0.9rem;
+  &:focus {
+    outline: none;
+    border-color: #ff4b2b;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
   }
 `;
 
 const TextArea = styled.textarea`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: white;
   font-size: 1rem;
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  transition: all 0.3s ease;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 8px;
-    font-size: 0.9rem;
-    height: 120px;
+  &:focus {
+    outline: none;
+    border-color: #ff4b2b;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
   }
 `;
 
 const SubmitButton = styled.button`
-  background-color: #ff4136;
+  background: linear-gradient(45deg, #ff4b2b, #ff416c);
   color: white;
   border: none;
-  padding: 12px 20px;
+  border-radius: 10px;
+  padding: 15px 30px;
   font-size: 1.1rem;
-  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
 
   &:hover {
-    background-color: #e30c00;
-  }
-
-  @media (max-width: ${breakpoints.tablet}) {
-    font-size: 1rem;
-    padding: 10px 15px;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 0.9rem;
-    padding: 8px 12px;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 75, 43, 0.3);
   }
 `;
 
 function Contato() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Formulário enviado:', formData);
-    setFormData({ name: '', email: '', message: '' });
+    // Aqui você pode adicionar a lógica para enviar o formulário
+    console.log(formData);
+    setFormData({ name: "", email: "", message: "" });
   };
 
   return (
     <ContatoSection>
       <Container>
-        <Title>Entre em Contato</Title>
-        <Subtitle>Estamos ansiosos para ouvir você!</Subtitle>
-        <ContactWrapper>
-          <ContactInfo>
-            <InfoItem>
-              <Icon><FaPhone /></Icon>
-              <InfoText>(34) 1234-5678</InfoText>
-            </InfoItem>
-            <InfoItem>
-              <Icon><FaEnvelope /></Icon>
-              <InfoText>contato@minastche.com</InfoText>
-            </InfoItem>
-            <InfoItem>
-              <Icon><FaMapMarkerAlt /></Icon>
-              <InfoText>Av. Cesário Alvim, 2385 - Nossa Sra. Aparecida, Uberlândia - MG</InfoText>
-            </InfoItem>
-            <InfoItem>
-              <Icon><FaClock /></Icon>
-              <InfoText>Terça a Domingo, das 11h às 23h</InfoText>
-            </InfoItem>
-          </ContactInfo>
-          <ContactForm onSubmit={handleSubmit}>
-            <Input 
-              type="text" 
-              name="name" 
-              placeholder="Seu Nome" 
-              value={formData.name} 
-              onChange={handleChange} 
-              required 
+        <Title>Contato</Title>
+        <Grid>
+          <ContactCard
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}>
+            <IconWrapper>
+              <FaPhone />
+            </IconWrapper>
+            <ContactInfo>
+              <a href="tel:3432321068">(34) 3232-1068</a>
+            </ContactInfo>
+          </ContactCard>
+
+          <ContactCard
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}>
+            <IconWrapper>
+              <FaWhatsapp />
+            </IconWrapper>
+            <ContactInfo>
+              <a
+                href="https://wa.me/553432321068"
+                target="_blank"
+                rel="noopener noreferrer">
+                (34) 3232-1068
+              </a>
+            </ContactInfo>
+          </ContactCard>
+
+          <ContactCard
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}>
+            <IconWrapper>
+              <FaMapMarkerAlt />
+            </IconWrapper>
+            <ContactInfo>
+              Av. João Naves de Ávila, 1331
+              <br />
+              Uberlândia - MG
+            </ContactInfo>
+          </ContactCard>
+
+          <ContactCard
+            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}>
+            <IconWrapper>
+              <FaClock />
+            </IconWrapper>
+            <ContactInfo>
+              Horário de Funcionamento
+              <Schedule>
+                Terça a Domingo
+                <br />
+                11:00 - 14:30 (Almoço)
+                <br />
+                19:00 - 23:00 (Jantar)
+              </Schedule>
+            </ContactInfo>
+          </ContactCard>
+        </Grid>
+
+        <FormSection>
+          <FormTitle>Envie uma Mensagem</FormTitle>
+          <Form onSubmit={handleSubmit}>
+            <Input
+              type="text"
+              placeholder="Seu Nome"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
             />
-            <Input 
-              type="email" 
-              name="email" 
-              placeholder="Seu E-mail" 
-              value={formData.email} 
-              onChange={handleChange} 
-              required 
+            <Input
+              type="email"
+              placeholder="Seu E-mail"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              required
             />
-            <TextArea 
-              name="message" 
-              placeholder="Sua Mensagem" 
-              value={formData.message} 
-              onChange={handleChange} 
-              required 
+            <TextArea
+              placeholder="Sua Mensagem"
+              value={formData.message}
+              onChange={(e) =>
+                setFormData({ ...formData, message: e.target.value })
+              }
+              required
             />
             <SubmitButton type="submit">Enviar Mensagem</SubmitButton>
-          </ContactForm>
-        </ContactWrapper>
+          </Form>
+        </FormSection>
       </Container>
     </ContatoSection>
   );
