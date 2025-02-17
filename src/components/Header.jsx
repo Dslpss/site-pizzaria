@@ -29,6 +29,7 @@ const HeaderContainer = styled.div`
 
   @media (max-width: ${breakpoints.tablet}) {
     padding: 0 15px;
+    flex-direction: column;
   }
 `;
 
@@ -223,6 +224,50 @@ const MobileHeader = styled.div`
   width: 100%;
 `;
 
+const DesktopNav = styled.nav`
+  @media (max-width: ${breakpoints.tablet}) {
+    display: none;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 5px 0;
+    transition: all 0.2s ease;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: white;
+      transition: width 0.2s ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+`;
+
 function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -271,6 +316,19 @@ function Header() {
             {isNavOpen ? <FaTimes /> : <FaBars />}
           </MenuToggle>
         </MobileHeader>
+
+        {/* Menu Desktop */}
+        <DesktopNav>
+          <ul>
+            <li><Link to="/">Início</Link></li>
+            <li><Link to="/cardapio">Cardápio</Link></li>
+            <li><Link to="/promocoes">Promoções</Link></li>
+            <li><Link to="/sobre">Sobre</Link></li>
+            <li><Link to="/contato">Contato</Link></li>
+          </ul>
+        </DesktopNav>
+
+        {/* Menu Mobile */}
         <MobileNav $isOpen={isNavOpen}>
           <MobileTitle $isOpen={isNavOpen}>Minas Tchê</MobileTitle>
           <ul>
