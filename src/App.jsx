@@ -9,6 +9,7 @@ import Promocoes from "./pages/Promocoes";
 import Sobre from "./pages/Sobre";
 import Contato from "./pages/Contato";
 import GlobalStyles from "./styles/GlobalStyles";
+import MobileNav from "./components/MobileNav";
 
 const AppContainer = styled.div`
   display: flex;
@@ -36,6 +37,7 @@ function App() {
           </Routes>
         </MainContent>
         <Footer />
+        <MobileNav />
       </AppContainer>
     </Router>
   );
